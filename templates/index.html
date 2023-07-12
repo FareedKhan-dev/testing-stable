@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: rgb(0, 0, 0);
+            width: 900px;
+            /* margin-left: auto;
+            
+            margin-right: auto; */
+        }
+
+        .big-type {
+            /* Copied almost wholesale from the Apple site CSS; changed the font-stack */
+            font-size: 64px;
+            line-height: 1.0625;
+            /* The height Apple used to tighten up the spacing a bit. */
+            font-weight: 600;
+            /* Nice, chunky, bold! */
+            font-family: "Manrope Light", sans-serif;
+        }
+
+        .masked-copy {
+            /* This is it! Magic: */
+            -webkit-background-clip: text;
+            color: transparent !important;
+
+        }
+
+        .masked-copy h2 {
+            color: white;
+            display: inline;
+            /* Get the font sizes and other features from those set on the parent */
+            font: inherit;
+        }
+
+        .masked-copy p {
+            font-size: 40px;
+            padding-bottom: 10px;
+        }
+
+        .texture-orange {
+            /* Set the text color to a solid, in case our super cool effects don't work.  */
+            color: #e5895f;
+
+            background-image: url('https://www.apple.com/v/iphone-xr/a/images/overview/copy_texture_4_large.jpg');
+        }
+
+        div.scroll-container {
+            background-color: #333;
+            overflow: auto;
+            white-space: nowrap;
+        }
+
+        div.scroll-container img {
+            padding: 0px;
+        }
+
+        img {
+            height: 350px;
+        }
+
+        /* width */
+        ::-webkit-scrollbar {
+            width: 0px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px grey;
+            border-radius: 4px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            /* background: rgb(248, 151, 60); */
+            /* border-radius: 5px; */
+            background: linear-gradient(to right, #C67588 0%, #F0A348 100%);
+        }
+
+        button {
+            background: linear-gradient(to right, #C67588 0%, #F0A348 100%);
+        }
+
+        .loader {
+            margin-top: 5%;
+            margin-left: 50%;
+            border: 3px solid #C67588;
+            border-radius: 30%;
+            display: flex;
+            justify-content: center;
+            /* border-top: 16px solid #ffc680; */
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite;
+            /* Safari */
+            animation: spin 3s linear infinite;
+        }
+
+        /* Safari */
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(180deg);
+            }
+        }
+    </style>
+
+    <title>DigiArt</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+</head>
+
+<body class="container mt-5">
+    <div class="masked-copy texture-orange big-type">
+        <h2>DigiArt</h2><br>
+        <p>Generate Powerful AI image from text, only for personal use</p>
+    </div>
+
+    <p class="w-75 text-white">Please refrain from using the generated images from this project on any social networks
+        or
+        attempting to resell them, as this could result in legal action. The purpose of this project is to evaluate the
+        effectiveness of stable diffusion and it is built upon the clipdro demo webapp found online.</p>
+    <form action="/" method="POST">
+
+        <div class="input-group mb-3 w-50">
+
+            <input type="text" class="form-control p-2 bg-dark text-white" style="border: 1px solid #C67588;"
+                placeholder="Enter your prompt" aria-describedby="button-addon2" name="prompt" id="prompt">
+            <button class="btn text-white" type="submit" id="button-addon2">Generate</button>
+
+        </div>
+    </form>
+
+    <span class="text-white" style="font-size: small;">generation process requires at least 60 seconds (1 image) and at
+        most 90 seconds (4 images)</span>
+
+    <!-- <div class="loader"></div> -->
+    <div id="loader" class="loader" style="display: none;"></div>
+    {% if images %}
+    <div class="scroll-container" style="border: 3px solid rgb(100, 51, 5); border-radius: 6px;">
+        {% for image in images %}
+        <img src="{{ image }}" alt="{{ image }}">
+        {% endfor %}
+        <!-- <img src="image_0.png" alt="Forest">
+        <img src="image_0.png" alt="Northern Lights"> -->
+    </div>
+    {% endif %}
+
+<!-- 
+    <div id="mcpd1">remove me</div>
+    <button id="rb">asfasfasfasasgasg</button> -->
+
+
+
+    <script>
+        // $('#rb').click(function () {
+        //     // if mcpdf1 exist remove it otherwise pass it
+        //     if ($('#mcpd1').length) {
+        //         $('#mcpd1').remove();
+        //     }
+        // });
+        //  click on generate button check it scroll-container div exist if it does remove it first, and display loader div and once scroll-container class div is loaded remove loader div
+        $('#button-addon2').click(function () {
+            if ($('.scroll-container').length) {
+                $('.scroll-container').remove();
+                $('#loader').css('display', 'block');
+            }
+            else {
+                $('#loader').css('display', 'block');
+            }
+        });
+    </script>
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
+    </script>
+
+</body>
+
+</html>
